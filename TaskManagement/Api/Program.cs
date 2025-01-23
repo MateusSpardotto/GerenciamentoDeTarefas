@@ -1,25 +1,16 @@
-var builder = WebApplication.CreateBuilder(args);
+using Domain.Entities;
+using Infra.Repository;
+using System;
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+class Program
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    static void Main()
+    {
+        using (var context = new DatabaseContext())
+        {
+            var userRepo = new UserRepository(context);
+            userRepo.InsertUser(new User { UserName = "João", Email = "joao@email.com" });
+            Console.WriteLine("Usuário inserido com sucesso!");
+        }
+    }
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
